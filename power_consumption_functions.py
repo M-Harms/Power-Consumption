@@ -6,7 +6,7 @@ from time import time
 from pathlib import Path
 import os
 import json
-import IPython
+
 
 import pandas as pd
 import numpy as np
@@ -336,17 +336,15 @@ def plot_prediction(y, y_pred, range_num=480
                     , title=None, legend=False):
     """Plot out a segment of the prediction """
     fig, ax = plt.subplots()
-    """fig.set_figwidth(figure_size[0])
-    fig.set_figheight(figure_size[1])"""
-    print(type(range_num))
+
     ax.plot(np.arange(start_num, range_num + start_num), y[start_num:range_num + start_num], label='Actual')
     ax.plot(np.arange(start_num, range_num + start_num), y_pred[start_num:range_num + start_num], label='Predicted')
-    """plt.title(title, fontsize=14)
+    plt.title(title, fontsize=14)
     if legend:
         plt.legend()
     if filename is not None:
         plt.savefig(filename, bbox_inches='tight')
-    """
+
     plt.show()
     # return ax
 
