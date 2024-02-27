@@ -7,7 +7,6 @@ from pathlib import Path
 import os
 import json
 
-
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -20,19 +19,17 @@ import keras
 import tensorflow as tf
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import LSTM
-from tensorflow.keras import layers
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.utils import to_categorical
-from keras.losses import mean_absolute_percentage_error
-from keras.losses import mean_squared_error
-from keras.losses import mean_absolute_error
 
-from sklearn.impute import SimpleImputer
-import sklearn as sk
-from sklearn import svm
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.grid'] = True
+plt.rcParams['grid.alpha'] = .5
 
+plt.rcParams['grid.color'] = '#b0b0b0'
+
+
+
+#plt.rcParamsax.grid(   which="major", axis='x', color='#DAD8D7', alpha=0.5, zorder=1)
+#       ax.grid(which="major", axis='y', color='#DAD8D7', alpha=0.5, zorder=1)
 
 def series_to_supervised(df, predict_columns=None, n_in=1, n_out=1, dropnan=True):
     """
@@ -266,7 +263,7 @@ def shape_for_CNN(X, n_features, n_steps=672):
 def plot_models_together(d, filename=None, no_title=False):
     """Plots all the metric curves on 4 plots in 1 figure"""
 
-    fig, axes = plt.subplots(3, 2)
+    fig, axes = plt.subplots(3, 2, dpi=300)
     # fig_sing, axes_sing = plt.subplots(1.1)
     fig.set_figheight(18)
     fig.set_figwidth(10)
@@ -278,32 +275,32 @@ def plot_models_together(d, filename=None, no_title=False):
         if p == 'val_MSE':
             ylab = 'MSE'
             title = 'Validation MSE'
-            lim = [0, 1.5]
+            lim = [0, 1]
             ax = axes[0, 0]
         elif p == 'MSE':
             ylab = 'MSE'
             title = 'Training MSE'
-            lim = [0, 1.5]
+            lim = [0, 1]
             ax = axes[0, 1]
         elif p == 'val_MAPE':
             ylab = 'MAPE'
             title = 'Validation MAPE'
-            lim = [0, 150]
+            lim = [0, 135]
             ax = axes[1, 0]
         elif p == 'MAPE':
             ylab = 'MAPE'
             title = 'Training MAPE'
-            lim = [0, 150]
+            lim = [0, 135]
             ax = axes[1, 1]
         elif p == 'val_MAE':
             ylab = 'MAE'
             title = 'Validation MAE'
-            lim = [0, 1.5]
+            lim = [0, 1]
             ax = axes[2, 0]
         elif p == 'MAE':
             ylab = 'MAE'
             title = 'Training MAE'
-            lim = [0, 1.5]
+            lim = [0, 1]
             ax = axes[2, 1]
         else:
             sys.exit('Plot type not defined')
@@ -318,12 +315,11 @@ def plot_models_together(d, filename=None, no_title=False):
         ax.set_ylim(lim)
         ax.set_xlabel('Epoch')
         ax.set_ylabel(ylab)
-
-        ax.set_title(title, fontsize=12)
-        ax.legend()
+        ax.set_title(title, fontsize=10)
+        ax.legend(frameon=False)
 
     if not no_title:
-        plt.suptitle('Model Comparison', fontsize=14, y=.91)
+        plt.suptitle('Model Comparison', fontsize=10, y=.91)
 
     if filename is not None:
         plt.savefig(filename, bbox_inches='tight')
@@ -336,37 +332,38 @@ def plot_prediction(y, y_pred, range_num=480
                     , title=None, legend=False):
     """Plot out a segment of the prediction """
     fig, ax = plt.subplots()
-
+    fig.set_figwidth(figure_size[0])
+    fig.set_figheight(figure_size[1])
     ax.plot(np.arange(start_num, range_num + start_num), y[start_num:range_num + start_num], label='Actual')
     ax.plot(np.arange(start_num, range_num + start_num), y_pred[start_num:range_num + start_num], label='Predicted')
     plt.title(title, fontsize=14)
     if legend:
-        plt.legend()
+        plt.legend(frameon=False)
     if filename is not None:
         plt.savefig(filename, bbox_inches='tight')
 
     plt.show()
-    # return ax
 
 
 def plot_prediction_mulitple(y, y_pred, model_title, range_num=480
                              , start_num=9600, figure_size=(10, 18), filename=None
                              , title='Prediction vs Actual', legend=False):
     """Plot out a segment of the prediction """
-    fig, ax = plt.subplots(4, 2)
+    fig, ax = plt.subplots(4, 2, dpi=300)
+    # ax.color_cycle: 332288, 88CCEE, 44AA99, 117733, 999933, DDCC77, CC6677, 882255
     x_values = np.arange(start_num, range_num + start_num)
     fig.set_figwidth(figure_size[0])
     fig.set_figheight(figure_size[1])
 
     plot_list = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0), (3, 1)]
     for i, sub_plot in enumerate(plot_list):
-        ax[sub_plot].plot(x_values, y[i][start_num:range_num + start_num], label='Actual')
-        ax[sub_plot].plot(x_values, y_pred[i][start_num:range_num + start_num], label='Predicted')
+        ax[sub_plot].plot(x_values, y[i][start_num:range_num + start_num], label='Actual', color='#1f78b4', linewidth=1.2)
+        ax[sub_plot].plot(x_values, y_pred[i][start_num:range_num + start_num], label='Predicted', color='#33a02c',linewidth=1.2)
         ax[sub_plot].set_xlabel('Time')
         ax[sub_plot].set_ylabel('kwh')
         ax[sub_plot].set_title(model_title[i], fontsize=12)
         if legend:
-            ax[sub_plot].legend()
+            ax[sub_plot].legend(frameon=False)
     if filename is not None:
         plt.savefig(filename, bbox_inches='tight')
     plt.suptitle(title, fontsize=14, y=.91)
