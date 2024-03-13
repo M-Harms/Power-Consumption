@@ -9,11 +9,8 @@ import json
 
 import pandas as pd
 import numpy as np
-import seaborn as sns
 
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from matplotlib.dates import DateFormatter
 
 import keras
 import tensorflow as tf
@@ -23,13 +20,9 @@ from tensorflow.keras.models import Sequential
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['axes.grid'] = True
 plt.rcParams['grid.alpha'] = .5
-
 plt.rcParams['grid.color'] = '#b0b0b0'
+plt.rcParams["axes.axisbelow"] = True
 
-
-
-#plt.rcParamsax.grid(   which="major", axis='x', color='#DAD8D7', alpha=0.5, zorder=1)
-#       ax.grid(which="major", axis='y', color='#DAD8D7', alpha=0.5, zorder=1)
 
 def series_to_supervised(df, predict_columns=None, n_in=1, n_out=1, dropnan=True):
     """
@@ -263,7 +256,7 @@ def shape_for_CNN(X, n_features, n_steps=672):
 def plot_models_together(d, filename=None, no_title=False):
     """Plots all the metric curves on 4 plots in 1 figure"""
 
-    fig, axes = plt.subplots(3, 2, dpi=300)
+    fig, axes = plt.subplots(3, 2)
     # fig_sing, axes_sing = plt.subplots(1.1)
     fig.set_figheight(18)
     fig.set_figwidth(10)
@@ -331,7 +324,7 @@ def plot_prediction(y, y_pred, range_num=480
                     , start_num=9600, figure_size=(3, 3), filename=None
                     , title=None, legend=False):
     """Plot out a segment of the prediction """
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(dpi = 300)
     fig.set_figwidth(figure_size[0])
     fig.set_figheight(figure_size[1])
     ax.plot(np.arange(start_num, range_num + start_num), y[start_num:range_num + start_num], label='Actual')
@@ -349,7 +342,7 @@ def plot_prediction_mulitple(y, y_pred, model_title, range_num=480
                              , start_num=9600, figure_size=(10, 18), filename=None
                              , title='Prediction vs Actual', legend=False):
     """Plot out a segment of the prediction """
-    fig, ax = plt.subplots(4, 2, dpi=300)
+    fig, ax = plt.subplots(4, 2)
     # ax.color_cycle: 332288, 88CCEE, 44AA99, 117733, 999933, DDCC77, CC6677, 882255
     x_values = np.arange(start_num, range_num + start_num)
     fig.set_figwidth(figure_size[0])
@@ -357,8 +350,8 @@ def plot_prediction_mulitple(y, y_pred, model_title, range_num=480
 
     plot_list = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0), (3, 1)]
     for i, sub_plot in enumerate(plot_list):
-        ax[sub_plot].plot(x_values, y[i][start_num:range_num + start_num], label='Actual', color='#1f78b4', linewidth=1.2)
-        ax[sub_plot].plot(x_values, y_pred[i][start_num:range_num + start_num], label='Predicted', color='#33a02c',linewidth=1.2)
+        ax[sub_plot].plot(x_values, y[i][start_num:range_num + start_num], label='Actual', linewidth=1.2)
+        ax[sub_plot].plot(x_values, y_pred[i][start_num:range_num + start_num], label='Predicted',linewidth=1.2)
         ax[sub_plot].set_xlabel('Time')
         ax[sub_plot].set_ylabel('kwh')
         ax[sub_plot].set_title(model_title[i], fontsize=12)
